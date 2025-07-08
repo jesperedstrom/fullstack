@@ -25,7 +25,7 @@ const Header = (props) => {
   )
 }
 
-const Content = (props) => {
+const Content_step1 = (props) => {
   console.log(props)
   return (
       <div>
@@ -39,6 +39,25 @@ const Content = (props) => {
           {props.part3} {props.exercises3}
         </p>
       </div>
+  )
+}
+
+const Content = (props) => {
+  return (
+    <div>
+      <Part part={props.part1} excercise={props.exercises1}/>
+      <Part part={props.part2} excercise={props.exercises2}/>
+      <Part part={props.part3} excercise={props.exercises3}/>
+    </div>
+  )
+}
+
+const Part = (props) => {
+  console.log(props)
+  return (
+    <div>
+      <p>{props.part} {props.excercise}</p>
+    </div>
   )
 }
 

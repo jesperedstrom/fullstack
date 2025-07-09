@@ -16,7 +16,7 @@ const App_step2 = () => {
   )
 }
 
-const App = () => {
+const App_step3 = () => {
   const course = 'Half Stack application development'
   const part1 = {
     name: 'Fundamentals of React',
@@ -36,6 +36,32 @@ const App = () => {
       <Header course={course} />
       <Content part1={part1.name} exercises1={part1.exercises} part2={part2.name} exercises2={part2.exercises} part3={part3.name} exercises3={part3.exercises} />
       <Total total={part1.exercises+part2.exercises+part3.exercises} />
+    </div>
+  )
+}
+
+const App = () => {
+  const course = 'Half Stack application development'
+  const parts = [
+    {
+      name: 'Fundamentals of React',
+      exercises: 10
+    },
+    {
+      name: 'Using props to pass data',
+      exercises: 7
+    },
+    {
+      name: 'State of a component',
+      exercises: 14
+    }
+  ]
+
+  return (
+    <div>
+      <Header course={course} />
+      <Content parts={parts} />
+      <Total parts={parts} />
     </div>
   )
 }
@@ -66,12 +92,24 @@ const Content_step1 = (props) => {
   )
 }
 
-const Content = (props) => {
+const Content_step2 = (props) => {
+  console.log(props)
   return (
     <div>
       <Part part={props.part1} excercise={props.exercises1}/>
       <Part part={props.part2} excercise={props.exercises2}/>
       <Part part={props.part3} excercise={props.exercises3}/>
+    </div>
+  )
+}
+
+const Content = (props) => {
+  console.log(props)
+  return (
+    <div>
+      <Part part={props.parts[0].name} excercise={props.parts[0].exercises}/>
+      <Part part={props.parts[1].name} excercise={props.parts[1].exercises}/>
+      <Part part={props.parts[2].name} excercise={props.parts[2].exercises}/>
     </div>
   )
 }
@@ -85,11 +123,20 @@ const Part = (props) => {
   )
 }
 
-const Total = (props) => {
+const Total_step3 = (props) => {
   console.log(props)
   return (
     <div>
       <p>Number of exercises {props.total}</p>
+    </div>
+  )
+}
+
+const Total = (props) => {
+  console.log(props)
+  return (
+    <div>
+      <p>Number of exercises {props.parts[0].exercises+props.parts[1].exercises+props.parts[2].exercises}</p>
     </div>
   )
 }

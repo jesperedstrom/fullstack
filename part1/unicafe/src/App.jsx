@@ -2,6 +2,13 @@ import { useState } from 'react'
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
+const StatisticLine = ({text, value}) => {
+  console.log(text, value)
+  return (
+    <span>{text} {value}</span>
+  )
+}
+
 const Statistics = ({good, neutral, bad}) => {
   
   const n = good+neutral+bad  
@@ -14,14 +21,14 @@ const Statistics = ({good, neutral, bad}) => {
     ) //Avoid division by zero
   } else {
     return (
-    <p>
-      good {good}<br/>
-      neutral {neutral}<br/>
-      bad {bad}<br/>
-      all {n}<br/>
-      average {good*100/n}<br/>
-      positive {(good-bad)/n} %
-    </p>
+    <div>
+      <StatisticLine text='good' value={good}/><br/>
+      <StatisticLine text='neutral' value={neutral}/><br/>
+      <StatisticLine text='bad' value={bad}/><br/>
+      <StatisticLine text='all' value={n}/><br/>
+      <StatisticLine text='average' value={(good-bad)/n}/><br/>
+      <StatisticLine text='positive' value={good*100/n}/> <span> %</span> 
+    </div>
     )
   }
 }

@@ -6,33 +6,26 @@ const Statistics = ({good, neutral, bad}) => {
   
   const n = good+neutral+bad  
   
-  const Average = () => {
-    if (n==0) {
-      return 0 //Avoid division by zero
-    } else {
-      return (good-bad)/n
-    }
-  }
-  
-  const Positive = () => {
-    if (n==0) {
-      return 0 //Avoid division by zero
-    } else {
-      return good*100/n
-    }
-  }
-
-  return (
+  if (n===0) {
+    return (
+      <p>
+        No feedback given
+      </p>
+    ) //Avoid division by zero
+  } else {
+    return (
     <p>
       good {good}<br/>
       neutral {neutral}<br/>
       bad {bad}<br/>
       all {n}<br/>
-      average {Average()}<br/>
-      positive {Positive()} %
+      average {good*100/n}<br/>
+      positive {(good-bad)/n} %
     </p>
-  )
+    )
+  }
 }
+
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0)

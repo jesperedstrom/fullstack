@@ -9,16 +9,18 @@ const StatisticLine = ({text, value}) => {
   )
 }
 
+const round = (num) => Math.round(num * 10) / 10;
+
 const Statistics = ({good, neutral, bad}) => {
   
   const n = good+neutral+bad  
   
-  if (n===0) {
+  if (n===0) { //If no feedback has been received (n=0)
     return (
       <p>
         No feedback given
       </p>
-    ) //Avoid division by zero
+    )
   } else {
     return (
     <div>
@@ -26,9 +28,53 @@ const Statistics = ({good, neutral, bad}) => {
       <StatisticLine text='neutral' value={neutral}/><br/>
       <StatisticLine text='bad' value={bad}/><br/>
       <StatisticLine text='all' value={n}/><br/>
-      <StatisticLine text='average' value={(good-bad)/n}/><br/>
-      <StatisticLine text='positive' value={good*100/n}/> <span> %</span> 
+      <StatisticLine text='average' value={round(good-bad/n)}/><br/>
+      <StatisticLine text='positive' value={round(good*100/n)}/> <span> %</span> 
     </div>
+    )
+  }
+}
+
+const Statistics_table = ({good, neutral, bad}) => {
+  
+  const n = good+neutral+bad  
+  
+  if (n===0) { //If no feedback has been received (n=0)
+    return (
+      <p>
+        No feedback given 
+      </p>
+    )
+  } else {
+    return (
+      <table>
+        <tbody>
+          <tr>
+            <td>good</td>
+            <td>{good}</td>
+          </tr>
+          <tr>
+            <td>neutral</td>
+            <td>{neutral}</td>
+          </tr>
+          <tr>
+            <td>bad</td>
+            <td>{bad}</td>
+          </tr>
+          <tr>
+            <td>all</td>
+            <td>{n}</td>
+          </tr>
+          <tr>
+            <td>average</td>
+            <td>{round((good-bad)/n)}</td>
+          </tr>
+          <tr>
+            <td>positive</td>
+            <td>{round(good*100/n)} <span>%</span></td>
+          </tr>
+        </tbody>
+      </table>
     )
   }
 }
@@ -49,7 +95,7 @@ const App = () => {
 
       <h1>statistics</h1>
 
-      <Statistics good={good} neutral={neutral} bad={bad}/>
+      <Statistics_table good={good} neutral={neutral} bad={bad}/>
 
     </div>
   )

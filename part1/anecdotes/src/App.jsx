@@ -2,6 +2,17 @@ import { useState } from 'react'
 
 const Button = ({ onClick, text }) => <button onClick={onClick}>{text}</button>
 
+const ShowMostVotes = ({votes, anecdotes}) => {
+  const argmax = votes.indexOf(Math.max(...votes));
+
+  return (
+    <p>
+      {anecdotes[argmax]}<br/>
+      has {votes[argmax]} votes
+    </p>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -22,7 +33,6 @@ const App = () => {
 
   // Function to call when clicking button
   const nextAnecdote = () =>{
-
      // Index of random anecdote
     const randint = Math.floor(Math.random() * n_anecdotes)
     console.log(randint) 
@@ -32,7 +42,6 @@ const App = () => {
   }
 
   const handleVote = () => {
-
     // Create copy of votes array and increment the value in position selected by one
     const copy = [...votes]
     copy[selected] += 1 
@@ -45,10 +54,14 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}<br/>
       has {votes[selected]} votes <br/>
       <Button onClick={handleVote} text='vote'/>
       <Button onClick={nextAnecdote} text='next anecdote'/>
+
+      <h1>Anecdote with most votes</h1>
+      <ShowMostVotes votes={votes} anecdotes={anecdotes}/>
     </div>
   )
 }

@@ -18,9 +18,10 @@ const App = () => {
   const n_anecdotes = anecdotes.length
   
   const [selected, setSelected] = useState(0)
+  const [votes, addVote] = useState(Array(n_anecdotes).fill(0))
 
   // Function to call when clicking button
-  const handleClick = () =>{
+  const nextAnecdote = () =>{
 
      // Index of random anecdote
     const randint = Math.floor(Math.random() * n_anecdotes)
@@ -30,11 +31,24 @@ const App = () => {
     setSelected(randint)
   }
 
+  const handleVote = () => {
+
+    // Create copy of votes array and increment the value in position selected by one
+    const copy = [...votes]
+    copy[selected] += 1 
+
+    // Update votes state
+    addVote(copy)
+
+    console.log(copy)
+  }
+
   return (
     <div>
       {anecdotes[selected]}<br/>
-
-      <Button onClick={handleClick} text='next anecdote'/>
+      has {votes[selected]} votes <br/>
+      <Button onClick={handleVote} text='vote'/>
+      <Button onClick={nextAnecdote} text='next anecdote'/>
     </div>
   )
 }

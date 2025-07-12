@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ({textFilter, onChange}) => (
   <form>
@@ -48,14 +49,11 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [textFilter, setTextFilter] = useState('')
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  }
-  useEffect(hook, [])
+  useEffect(() => {
+    personService
+    .getAll()
+    .then(initialPersons => setPersons(initialPersons))
+  }, [])
 
   const addName = (event) => {
     event.preventDefault()
@@ -64,13 +62,12 @@ const App = () => {
     if (persons.find((person) => person.name === newName)) {
       window.alert(`${newName} is already added to phonebook`)
     } else { // If a person with the same name does not exist, add them
-      const nameObject = {name: newName, number: newNumber, id: persons.length+1}
-      //setPersons(persons.concat(nameObject))
+      const nameObject = {name: newName, number: newNumber, id: `${persons.length+1}`} // id as string to be consistent with given data
 
-      axios.post('http://localhost:3001/persons', nameObject)
-        .then(response => response.data)
-        .then(returnedName => {
-        setPersons(persons.concat(returnedName))
+      personService
+      .create(nameObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
       })

@@ -25,23 +25,15 @@ const PersonForm = ({onSubmit, newName, newNumber, handleNewName, handleNewNumbe
   </form>
 )
 
-const Persons = ({persons}) => (
+const Persons = ({persons, onRemove}) => (
   <div>
-    {persons.map(person => <Person key={person.name} person={person}/>)}
+    {persons.map(person => <Person key={person.name} person={person} onRemove={onRemove}/>)}
   </div>
 )
 
-const Person = ({person}) => <div>{person.name} {person.number}</div>
+const Person = ({person, onRemove}) => <div>{person.name} {person.number} <DeleteButton onClick={() => onRemove(person)}/></div>
 
-// Function for filtering person list
-const filterPersons = (persons, textFilter) => {
-  const persons_filtered = persons.filter((person) => person.name.toLowerCase().indexOf(textFilter.toLowerCase()) != -1)
-  // console.log('Rendered persons are', persons_filtered)
-
-  return (
-    persons_filtered
-  )
-}
+const DeleteButton = ({onClick}) => <button onClick={onClick}>delete</button>
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -62,7 +54,7 @@ const App = () => {
     if (persons.find((person) => person.name === newName)) {
       window.alert(`${newName} is already added to phonebook`)
     } else { // If a person with the same name does not exist, add them
-      const nameObject = {name: newName, number: newNumber, id: `${persons.length+1}`} // id as string to be consistent with given data
+      const nameObject = {name: newName, number: newNumber} //, id: `${persons.length+1}`} // Let id be decided automatically
 
       personService
       .create(nameObject)
@@ -85,6 +77,31 @@ const App = () => {
   const handleTextFilter = (event) => {
     setTextFilter(event.target.value)
   }
+  
+  // Function for filtering person list
+  const filterPersons = (persons, textFilter) => {
+    const persons_filtered = persons.filter((person) => person.name.toLowerCase().indexOf(textFilter.toLowerCase()) != -1)
+    // console.log('Rendered persons are', persons_filtered)
+    return (
+      persons_filtered
+    )
+  }
+
+  // Function for deleting a Person
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      console.log(`Deleting person with name ${person.name}`)
+
+      // Remove person from server
+      personService
+      .remove(person.id)
+      
+      // Remove the person from the persons state
+      const newPersons = persons.filter((p) => p.id != person.id)
+      setPersons(newPersons)
+    }
+
+  }
 
   // Filter person list baased on the text filter
   const persons_show = filterPersons(persons, textFilter)
@@ -101,7 +118,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons persons={persons_show}/> 
+      <Persons persons={persons_show} onRemove={deletePerson}/> 
 
     </div>
   )

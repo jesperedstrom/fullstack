@@ -13,6 +13,18 @@ const Notification = ({ message }) => {
   )
 }
 
+const Warning = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className='warning'>
+      {message}
+    </div>
+  )
+}
+
 const Filter = ({textFilter, onChange}) => (
   <form>
     <div>
@@ -38,7 +50,7 @@ const PersonForm = ({onSubmit, newName, newNumber, handleNewName, handleNewNumbe
 
 const Persons = ({persons, onRemove}) => (
   <div>
-    {persons.map(person => <Person key={person.name} person={person} onRemove={onRemove}/>)}
+    {persons.map(person => <Person key={person.id} person={person} onRemove={onRemove}/>)}
   </div>
 )
 
@@ -52,6 +64,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [textFilter, setTextFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [warning, setWarning] = useState(null)
 
   useEffect(() => {
     personService
@@ -79,6 +92,16 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 5000)
+        })
+        .catch(error => {
+          setWarning( `Information of ${newPerson.name} has already been removed from the server` )
+          setTimeout(() => {
+            setWarning(null)
+          }, 5000)
+      
+          // Remove the person from the persons state if PUT was unsuccessful
+          const newPersons = persons.filter((p) => p.id != id)
+          setPersons(newPersons)
         })
       }
     } else { // If a person with the same name does not exist, add them
@@ -126,6 +149,12 @@ const App = () => {
       // Remove person from server
       personService
       .remove(person.id)
+      .catch(error => { // Adding a warning if the deletion fails (similar to if update fails) to avoid a "Uncaught (in promise) Error"
+        setWarning( `Information of ${person.name} has already been removed from the server` )
+        setTimeout(() => {
+          setWarning(null)
+        }, 5000)
+      })
       
       // Remove the person from the persons state
       const newPersons = persons.filter((p) => p.id != person.id)
@@ -142,6 +171,7 @@ const App = () => {
       <h2>Phonebook</h2>
       
       <Notification message={message} />
+      <Warning message={warning} />
 
       <Filter textFilter={textFilter} onChange={handleTextFilter}/>
 

@@ -9,7 +9,7 @@ const Filter = ({searchText, onChange}) => (
   </form>
 )
 
-const Countries = ({countries}) => {
+const Countries = ({countries, onShow}) => {
 
     if (countries.length > 10) {
       return(
@@ -25,10 +25,12 @@ const Countries = ({countries}) => {
       )
     } else {
       return(
-      countries.map(country => <div key={country.cca3}>{country.name.common}</div>)
+      countries.map(country => <div key={country.cca3}>{country.name.common} <ShowButton onClick={()=>onShow([country])}/></div>)
       )
     }
 }
+
+const ShowButton = ({onClick}) => <button onClick={onClick}>show</button>
 
 const ShowSingleCountry = ({country}) => {
 
@@ -36,7 +38,7 @@ const ShowSingleCountry = ({country}) => {
     <div>
       <h1>{country.name.common}</h1>
       <p>
-        Capital {country.capital}<br/>
+        Capital {country.capital.join(', ')}<br/>
         Area {country.area}
       </p>
 
@@ -84,7 +86,7 @@ function App() {
     <div>
       <Filter searchText={searchText} onChange={handleSearchText}/>
 
-      <Countries countries={filteredCountries}/>
+      <Countries countries={filteredCountries} onShow={setFilteredCountries}/>
     </div>
 
     
